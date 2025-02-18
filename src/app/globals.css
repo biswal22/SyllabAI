@@ -1,0 +1,195 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-rgb: 255, 255, 255;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-rgb));
+}
+
+/* Add these print styles */
+@media print {
+  @page {
+    margin: 1cm;
+  }
+  
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  table {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  
+  h3 {
+    break-before: auto;
+    page-break-before: auto;
+  }
+  
+  .schedule-section {
+    break-before: page;
+  }
+  
+  @page {
+    margin: 15mm;
+    size: A4;
+  }
+
+  /* Container for all schedule pages */
+  .schedule-container {
+    display: block;
+  }
+
+  /* Legend page */
+  .schedule-legend-page {
+    height: 100vh;
+    page-break-after: always;
+    page-break-inside: avoid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Individual month pages */
+  .schedule-month-page {
+    height: 100vh;
+    page-break-before: always;
+    page-break-after: always;
+    page-break-inside: avoid;
+    padding: 10mm;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .calendar-grid {
+    width: 190mm;
+    margin: 0 auto;
+  }
+
+  /* Smaller text sizes for calendar content */
+  .calendar-grid .text-xs {
+    font-size: 0.65rem;
+    line-height: 1.1;
+  }
+
+  .calendar-grid .text-sm {
+    font-size: 0.75rem;
+    line-height: 1.2;
+  }
+
+  .calendar-grid .text-\[11px\] {
+    font-size: 0.6rem;
+    line-height: 1.1;
+  }
+
+  .calendar-grid .text-\[10px\] {
+    font-size: 0.55rem;
+    line-height: 1.1;
+  }
+
+  /* Ensure last page doesn't force an extra blank page */
+  .schedule-month-page:last-child {
+    page-break-after: auto;
+  }
+
+  @page {
+    margin: 0;
+    size: A4 portrait;
+  }
+
+  /* Hide any scrollbars in print */
+  * {
+    overflow: visible !important;
+  }
+}
+
+/* Add these custom background colors for events */
+.bg-indigo-100 { background-color: #E0E7FF; }
+.bg-indigo-200 { background-color: #C7D2FE; }
+.bg-indigo-300 { background-color: #A5B4FC; }
+.bg-indigo-400 { background-color: #818CF8; }
+.bg-indigo-500 { background-color: #6366F1; }
+.bg-indigo-600 { background-color: #4F46E5; }
+
+/* Hover states */
+.hover\:bg-indigo-100\/80:hover { background-color: rgba(224, 231, 255, 0.8); }
+.hover\:bg-indigo-200\/80:hover { background-color: rgba(199, 210, 254, 0.8); }
+.hover\:bg-indigo-300\/80:hover { background-color: rgba(165, 180, 252, 0.8); }
+.hover\:bg-indigo-400\/80:hover { background-color: rgba(129, 140, 248, 0.8); }
+.hover\:bg-indigo-500\/80:hover { background-color: rgba(99, 102, 241, 0.8); }
+.hover\:bg-indigo-600\/80:hover { background-color: rgba(79, 70, 229, 0.8); }
+
+/* Add specific break controls */
+.print\:break-before-page {
+  break-before: page;
+}
+
+.print\:break-inside-avoid {
+  break-inside: avoid;
+}
+
+/* Preview styles */
+.schedule-month-page {
+  min-height: 100vh;
+  padding: 10mm;
+}
+
+.schedule-legend-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Improved cell spacing */
+.calendar-grid .grid-cols-7 > * {
+  min-width: 0;
+  word-wrap: break-word;
+}
+
+/* Compact event cards */
+.calendar-grid .p-2 {
+  padding: 0.4rem;
+}
+
+.calendar-grid .p-3 {
+  padding: 0.6rem;
+}
+
+.calendar-grid .space-y-1\.5 > * + * {
+  margin-top: 0.25rem;
+}
+
+/* Add color variations */
+.bg-blue-200 { background-color: #BFDBFE; }
+.bg-emerald-200 { background-color: #A7F3D0; }
+.bg-purple-200 { background-color: #DDD6FE; }
+.bg-amber-200 { background-color: #FDE68A; }
+.bg-rose-200 { background-color: #FECDD3; }
+.bg-cyan-200 { background-color: #A5F3FC; }
+
+.hover\:bg-blue-300:hover { background-color: #93C5FD; }
+.hover\:bg-emerald-300:hover { background-color: #6EE7B7; }
+.hover\:bg-purple-300:hover { background-color: #C4B5FD; }
+.hover\:bg-amber-300:hover { background-color: #FCD34D; }
+.hover\:bg-rose-300:hover { background-color: #FDA4AF; }
+.hover\:bg-cyan-300:hover { background-color: #67E8F9; }
+
+.text-blue-900 { color: #1E3A8A; }
+.text-emerald-900 { color: #064E3B; }
+.text-purple-900 { color: #4C1D95; }
+.text-amber-900 { color: #78350F; }
+.text-rose-900 { color: #881337; }
+.text-cyan-900 { color: #164E63; }
+
+/* Exam highlighting */
+.bg-red-100 { background-color: #FEE2E2; }
+.text-red-900 { color: #7F1D1D; }
+.ring-red-500 { box-shadow: 0 0 0 1px #EF4444; }
