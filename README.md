@@ -39,15 +39,14 @@ SyllabAI is a web application that helps students combine and compare syllabuses
 
 ### Usage
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser
+Open [http://localhost:3000](http://localhost:3000) in your browser
 
 ## Tech Stack 💻
 
 - **Frontend**: React with Next.js
 - **Styling**: Tailwind CSS
-- **PDF Processing**: pdf.js
+- **PDF Processing**: OpenAI API
 - **Calendar**: Custom implementation with date-fns
 - **PDF Export**: html2canvas & jsPDF
 
-## Project Structure 📁
 
