@@ -229,7 +229,6 @@ export function PreviewModal({ syllabuses, selectedSections, onClose }: PreviewM
     const { start, end } = getSemesterRange(syllabuses);
     const months = createSemesterCalendar(start, end);
 
-    // Define distinct colors for different courses
     const courseColors = [
       'blue',
       'emerald',
@@ -241,29 +240,28 @@ export function PreviewModal({ syllabuses, selectedSections, onClose }: PreviewM
 
     return (
       <div className="schedule-container">
-        {/* Legend gets its own page with updated colors */}
-        <div className="schedule-legend-page">
+        {/* Legend gets its own page */}
+        <div className="schedule-legend-page bg-white">
           <div className="flex flex-wrap gap-4 justify-center p-4">
-            <h2 className="w-full text-xl font-bold text-center mb-4">Course Schedule Legend</h2>
+            <h2 className="w-full text-xl font-bold text-center mb-4 text-gray-900">Course Schedule Legend</h2>
             {syllabuses.map(({ parsed, fileName }, index) => (
-              <div key={fileName} className="flex items-center gap-2 text-sm">
+              <div key={fileName} className="flex items-center gap-2 text-sm text-gray-900">
                 <div className={`w-3 h-3 rounded-full bg-${courseColors[index]}-200`} />
                 <span>{parsed.courseInfo?.title || fileName}</span>
               </div>
             ))}
-            {/* Add exam legend */}
-            <div className="w-full flex items-center gap-2 text-sm justify-center mt-2">
+            <div className="w-full flex items-center gap-2 text-sm justify-center mt-2 text-gray-900">
               <div className="w-3 h-3 rounded-full bg-red-100 ring-1 ring-red-500" />
               <span>Exam Day</span>
             </div>
           </div>
         </div>
 
-        {/* Each month gets its own full page */}
+        {/* Each month gets its own page */}
         {months.map(({ date, weeks }, monthIndex) => (
-          <div key={format(date, 'yyyy-MM')} className="schedule-month-page">
+          <div key={format(date, 'yyyy-MM')} className="schedule-month-page bg-white">
             <div className="h-full flex flex-col">
-              <h3 className="text-xl font-bold text-center mb-6">
+              <h3 className="text-xl font-bold text-center mb-6 text-gray-900">
                 {format(date, 'MMMM yyyy')}
               </h3>
               

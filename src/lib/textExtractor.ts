@@ -1,6 +1,6 @@
 import { UploadedFile, SupportedFileType, ParsedSyllabus } from '../types/pdf';
 
-const BACKEND_URL = 'http://localhost:5000';
+const BACKEND_URL = process.env.BACKEND_API_URL || 'http://localhost:5000';
 
 export async function extractText(file: File): Promise<ParsedSyllabus> {
   try {
@@ -11,6 +11,12 @@ export async function extractText(file: File): Promise<ParsedSyllabus> {
       method: 'POST',
       body: formData,
     });
+
+    // Handle rate limit errors (HTTP 429)
+    if (response.status === 429) {
+      const rateLimitError = await response.json();
+      throw new Error('Rate limit exceeded. Please try again later.');
+    }
 
     if (!response.ok) {
       throw new Error('Failed to extract text from file');

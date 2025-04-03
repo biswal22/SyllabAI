@@ -13,12 +13,14 @@ export function PDFUploader() {
   const [files, setFiles] = useState<UploadedFile[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [rateLimitError, setRateLimitError] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFiles = async (fileList: FileList | null) => {
     if (!fileList) return;
     
     setIsProcessing(true);
+    setRateLimitError(false);
     try {
       const newFiles: UploadedFile[] = [];
       
@@ -32,10 +34,17 @@ export function PDFUploader() {
             error: null
           });
         } catch (error) {
+          const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+          
+          // Check if it's a rate limit error
+          if (errorMessage.toLowerCase().includes('rate limit exceeded')) {
+            setRateLimitError(true);
+          }
+          
           newFiles.push({
             file,
             parsed: null,
-            error: error instanceof Error ? error.message : 'Unknown error'
+            error: errorMessage
           });
         }
       }
@@ -72,6 +81,14 @@ export function PDFUploader() {
 
   return (
     <div className="flex flex-col gap-4">
+      {/* Rate Limit Error */}
+      {rateLimitError && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+          <strong className="font-bold">Usage limit reached!</strong>
+          <span className="block sm:inline"> You've reached your usage limit. Please try again later.</span>
+        </div>
+      )}
+      
       {/* Drop Zone */}
       <div
         onClick={() => fileInputRef.current?.click()}

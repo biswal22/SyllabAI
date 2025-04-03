@@ -45,7 +45,7 @@ export function SyllabusSelector({ syllabuses }: SyllabusSelectorProps) {
   return (
     <div className="space-y-6">
       <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-xl font-semibold mb-4">Select Sections to Compare</h2>
+        <h2 className="text-xl font-semibold mb-4 text-gray-900">Select Sections to Compare</h2>
         
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {commonSections.map(section => (

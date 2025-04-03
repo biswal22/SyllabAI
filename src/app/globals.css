@@ -2,6 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Slower, smoother transitions for theme switching */
+* {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 800ms; /* Increased from 150ms to 300ms for smoother transition */
+}
+
+/* Exclude certain properties from transition to prevent unwanted animations */
+.no-theme-transition {
+  transition: none;
+}
+
+/* Optional: Add specific transitions for certain elements */
+.bg-transition {
+  transition-property: background-color;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 800ms; /* Even slower for background transitions */
+}
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-rgb: 255, 255, 255;

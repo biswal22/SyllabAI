@@ -14,12 +14,22 @@ from dotenv import load_dotenv
 import asyncio
 import json
 import re
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 # Load environment variables
 load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
+
+# Initialize rate limiter with specific limits per user IP
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["24 per day", "12 per hour"],
+    storage_uri="memory://",
+)
 
 # Initialize OpenAI client
 client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
@@ -206,6 +216,7 @@ def analyze_with_gpt(text: str):
         raise
 
 @app.route('/extract-text', methods=['POST'])
+@limiter.limit("12 per hour; 24 per day; 48 per week")
 def extract_text():
     logger.debug("Received text extraction request")
     
@@ -270,6 +281,16 @@ def extract_text():
                 logger.debug("Cleaned up temporary file")
             except Exception as e:
                 logger.error(f"Error cleaning up temporary file: {str(e)}")
+
+# Add error handler for rate limit exceeded
+@app.errorhandler(429)
+def ratelimit_handler(e):
+    logger.warning(f"Rate limit exceeded: {e.description}")
+    return jsonify({
+        'error': 'Rate limit exceeded',
+        'message': 'You have reached your usage limit. Please try again later.',
+        'retry_after': e.retry_after if hasattr(e, 'retry_after') else None
+    }), 429
 
 if __name__ == '__main__':
     logger.info("Starting Flask server...")
