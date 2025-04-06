@@ -21,14 +21,24 @@ from flask_limiter.util import get_remote_address
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app)
+
+# Configure CORS for different environments
+if os.environ.get('FLASK_ENV') == 'production':
+    # In production, only allow requests from the frontend domain
+    frontend_url = os.environ.get('FRONTEND_URL', '*')
+    CORS(app, resources={r"/*": {"origins": frontend_url}})
+    print(f"Running in production mode, CORS configured for: {frontend_url}")
+else:
+    # In development, allow all origins
+    CORS(app)
+    print("Running in development mode, CORS configured for all origins")
 
 # Initialize rate limiter with specific limits per user IP
 limiter = Limiter(
     get_remote_address,
     app=app,
-    default_limits=["24 per day", "12 per hour"],
-    storage_uri="memory://",
+    default_limits=["24 per day", "12 per hour", "48 per week"],
+    storage_uri=os.environ.get('REDIS_URL', 'memory://'),
 )
 
 # Initialize OpenAI client

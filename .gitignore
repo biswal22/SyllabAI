@@ -29,6 +29,12 @@ webpack.cache/
 .env
 .env.local
 .env.*.local
+.env.production
+.env.development
+backend/.env
+backend/.env.local
+backend/.env.production
+backend/.env.development
 
 # Logs
 logs
@@ -51,4 +57,16 @@ yarn-error.log*
 .vercel
 
 # TypeScript
-next-env.d.ts 
+next-env.d.ts
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+backend/venv/
+backend/__pycache__/
+*.egg-info/ 

@@ -1,12 +1,9 @@
 'use client';
 import React from 'react';
 import { useState, useCallback, useRef } from 'react';
-import { UploadedFile, ParsedSyllabus, SyllabusSelections } from '../types/pdf';
-import { combinePDFs } from '../lib/pdfUtils';
-import { DefaultButton } from './buttons';
+import { UploadedFile } from '../types/pdf';
 import { parseSyllabus } from '../lib/syllabusParser';
 import { SyllabusSelector } from './SyllabusSelector';
-import { combineSelectedSections } from '../lib/documentCombiner';
 import { FiUploadCloud, FiX, FiLoader } from 'react-icons/fi';
 
 export function PDFUploader() {

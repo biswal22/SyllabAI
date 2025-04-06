@@ -15,7 +15,7 @@ export default function PrivacyPolicy() {
         <section>
           <h2 className="text-xl font-semibold mb-3">Syllabus Processing</h2>
           <p>
-            When you upload a syllabus, the content is temporarily processed using OpenAI's API to extract 
+            When you upload a syllabus, the content is temporarily processed using OpenAI&apos;s API to extract 
             relevant information. The processing is done in real-time, and no content is retained after 
             the processing is complete. The extracted information is immediately returned to your browser 
             and is not stored on our servers.
@@ -25,14 +25,14 @@ export default function PrivacyPolicy() {
         <section>
           <h2 className="text-xl font-semibold mb-3">Third-Party Services</h2>
           <p>
-            We use OpenAI's API to process syllabus content. While we do not store your data, the 
-            processing occurs through OpenAI's servers. We encourage you to review 
+            We use OpenAI&apos;s API to process syllabus content. While we do not store your data, the 
+            processing occurs through OpenAI&apos;s servers. We encourage you to review 
             <a 
               href="https://openai.com/privacy" 
               target="_blank" 
               rel="noopener noreferrer"
               className="text-indigo-600 hover:text-indigo-800"
-            > OpenAI's privacy policy </a>
+            > OpenAI&apos;s privacy policy </a>
             for more information about their data handling practices.
           </p>
         </section>
