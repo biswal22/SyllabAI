@@ -37,7 +37,7 @@ else:
 limiter = Limiter(
     get_remote_address,
     app=app,
-    default_limits=["24 per day", "12 per hour", "48 per week"],
+    default_limits=["24 per day", "12 per hour"],
     storage_uri=os.environ.get('REDIS_URL', 'memory://'),
 )
 
@@ -226,7 +226,7 @@ def analyze_with_gpt(text: str):
         raise
 
 @app.route('/extract-text', methods=['POST'])
-@limiter.limit("12 per hour; 24 per day; 48 per week")
+@limiter.limit("12 per hour; 24 per day")
 def extract_text():
     logger.debug("Received text extraction request")
     
