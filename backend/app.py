@@ -25,9 +25,14 @@ app = Flask(__name__)
 # Configure CORS for different environments
 if os.environ.get('FLASK_ENV') == 'production':
     # In production, only allow requests from the frontend domain
-    frontend_url = os.environ.get('FRONTEND_URL', '*')
-    CORS(app, resources={r"/*": {"origins": frontend_url}})
-    print(f"Running in production mode, CORS configured for: {frontend_url}")
+    frontend_url = os.environ.get('FRONTEND_URL', 'https://syllab-ai.vercel.app')
+    cors_options = {
+        "origins": [frontend_url],
+        "methods": ["GET", "POST", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"],
+        "supports_credentials": True
+    }
+    CORS(app, resources={r"/*": cors_options})
 else:
     # In development, allow all origins
     CORS(app)
