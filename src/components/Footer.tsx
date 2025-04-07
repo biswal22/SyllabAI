@@ -26,7 +26,7 @@ export function Footer() {
             <ul className="mt-4 space-y-4">
               <li>
                 <Link href="/combine" className="text-base text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
-                  Combine Syllabuses
+                  Combine Syllabi
                 </Link>
               </li>
               <li>
@@ -56,7 +56,18 @@ export function Footer() {
                   className="text-base text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white flex items-center gap-2"
                 >
                   <FiLinkedin className="h-5 w-5" />
-                  LinkedIn
+                  Aniket Biswal
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://linkedin.com/in/aj-bergstedt-36a535239/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-base text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white flex items-center gap-2"
+                >
+                  <FiLinkedin className="h-5 w-5" />
+                  AJ Bergstedt
                 </a>
               </li>
               <li>
