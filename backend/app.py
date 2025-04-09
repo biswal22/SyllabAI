@@ -46,16 +46,25 @@ limiter = Limiter(
     storage_uri=os.environ.get('REDIS_URL', 'memory://'),
 )
 
-# Initialize OpenAI client
+# Set up logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
+# Initialize OpenAI client safely
+logger.info("Getting OpenAI API key")
 api_key = os.getenv('OPENAI_API_KEY')
 if not api_key:
     logger.error("OPENAI_API_KEY environment variable is not set")
     raise ValueError("OPENAI_API_KEY environment variable is required")
-client = OpenAI(api_key=api_key)
 
-# Set up logging
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
+logger.info("Initializing OpenAI client")
+try:
+    # Initialize with minimum parameters to avoid compatibility issues
+    client = OpenAI(api_key=api_key)
+    logger.info("OpenAI client successfully initialized")
+except Exception as e:
+    logger.error(f"Failed to initialize OpenAI client: {str(e)}")
+    raise
 
 def extract_text_from_pdf(file_path):
     logger.debug(f"Attempting to extract text from PDF: {file_path}")
