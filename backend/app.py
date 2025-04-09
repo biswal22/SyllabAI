@@ -71,19 +71,33 @@ def extract_text_from_pdf(file_path):
         
         # If no text found, try OCR
         logger.debug("No text found with PyMuPDF, attempting OCR...")
-        images = convert_from_path(file_path)
-        text = ""
         
-        for i, image in enumerate(images):
-            logger.debug(f"Processing page {i+1} with OCR")
-            page_text = pytesseract.image_to_string(image)
-            text += page_text + "\n"
-            
-        if not text.strip():
-            raise Exception("No text extracted from PDF")
-            
-        return text
+        # Check if tesseract is available
+        try:
+            tesseract_version = pytesseract.get_tesseract_version()
+            logger.debug(f"Tesseract version: {tesseract_version}")
+        except Exception as e:
+            logger.error(f"Tesseract not available: {str(e)}")
+            raise Exception("OCR processing failed: Tesseract OCR is not available on the server. Please try a different PDF that contains searchable text.")
         
+        # Try OCR with tesseract
+        try:
+            images = convert_from_path(file_path)
+            text = ""
+            
+            for i, image in enumerate(images):
+                logger.debug(f"Processing page {i+1} with OCR")
+                page_text = pytesseract.image_to_string(image)
+                text += page_text + "\n"
+                
+            if not text.strip():
+                raise Exception("No text extracted from PDF after OCR attempt")
+                
+            return text
+        except Exception as e:
+            logger.error(f"Error in OCR processing: {str(e)}")
+            raise Exception(f"OCR processing failed: {str(e)}")
+            
     except Exception as e:
         logger.error(f"Error in PDF extraction: {str(e)}")
         raise
