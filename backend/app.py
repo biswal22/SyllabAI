@@ -47,7 +47,11 @@ limiter = Limiter(
 )
 
 # Initialize OpenAI client
-client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+api_key = os.getenv('OPENAI_API_KEY')
+if not api_key:
+    logger.error("OPENAI_API_KEY environment variable is not set")
+    raise ValueError("OPENAI_API_KEY environment variable is required")
+client = OpenAI(api_key=api_key)
 
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)

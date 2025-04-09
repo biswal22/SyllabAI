@@ -29,11 +29,13 @@ RUN if [ -f requirements.txt ]; then \
     fi
 
 # Install Python dependencies
+# Pin the openai version to 1.1.1 to avoid compatibility issues
+RUN pip install --no-cache-dir openai==1.1.1
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
-ENV PORT=5000
+ENV PORT=8080
 
 # Expose the port
 EXPOSE ${PORT}
