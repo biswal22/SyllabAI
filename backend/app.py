@@ -25,14 +25,9 @@ app = Flask(__name__)
 # Configure CORS for different environments
 if os.environ.get('FLASK_ENV') == 'production':
     # In production, only allow requests from the frontend domain
-    frontend_url = os.environ.get('FRONTEND_URL', 'https://syllab-ai.vercel.app')
-    cors_options = {
-        "origins": [frontend_url],
-        "methods": ["GET", "POST", "OPTIONS"],
-        "allow_headers": ["Content-Type", "Authorization"],
-        "supports_credentials": True
-    }
-    CORS(app, resources={r"/*": cors_options})
+    frontend_url = os.environ.get('FRONTEND_URL', '*')
+    CORS(app, resources={r"/*": {"origins": frontend_url}})
+    print(f"Running in production mode, CORS configured for: {frontend_url}")
 else:
     # In development, allow all origins
     CORS(app)
@@ -50,21 +45,8 @@ limiter = Limiter(
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-# Initialize OpenAI client safely
-logger.info("Getting OpenAI API key")
-api_key = os.getenv('OPENAI_API_KEY')
-if not api_key:
-    logger.error("OPENAI_API_KEY environment variable is not set")
-    raise ValueError("OPENAI_API_KEY environment variable is required")
-
-logger.info("Initializing OpenAI client")
-try:
-    # Initialize with minimum parameters to avoid compatibility issues
-    client = OpenAI(api_key=api_key)
-    logger.info("OpenAI client successfully initialized")
-except Exception as e:
-    logger.error(f"Failed to initialize OpenAI client: {str(e)}")
-    raise
+# Initialize OpenAI client
+client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
 def extract_text_from_pdf(file_path):
     logger.debug(f"Attempting to extract text from PDF: {file_path}")
@@ -85,31 +67,18 @@ def extract_text_from_pdf(file_path):
         # If no text found, try OCR
         logger.debug("No text found with PyMuPDF, attempting OCR...")
         
-        # Check if tesseract is available
-        try:
-            tesseract_version = pytesseract.get_tesseract_version()
-            logger.debug(f"Tesseract version: {tesseract_version}")
-        except Exception as e:
-            logger.error(f"Tesseract not available: {str(e)}")
-            raise Exception("OCR processing failed: Tesseract OCR is not available on the server. Please try a different PDF that contains searchable text.")
+        images = convert_from_path(file_path)
+        text = ""
         
-        # Try OCR with tesseract
-        try:
-            images = convert_from_path(file_path)
-            text = ""
+        for i, image in enumerate(images):
+            logger.debug(f"Processing page {i+1} with OCR")
+            page_text = pytesseract.image_to_string(image)
+            text += page_text + "\n"
             
-            for i, image in enumerate(images):
-                logger.debug(f"Processing page {i+1} with OCR")
-                page_text = pytesseract.image_to_string(image)
-                text += page_text + "\n"
-                
-            if not text.strip():
-                raise Exception("No text extracted from PDF after OCR attempt")
-                
-            return text
-        except Exception as e:
-            logger.error(f"Error in OCR processing: {str(e)}")
-            raise Exception(f"OCR processing failed: {str(e)}")
+        if not text.strip():
+            raise Exception("No text extracted from PDF")
+            
+        return text
             
     except Exception as e:
         logger.error(f"Error in PDF extraction: {str(e)}")
@@ -333,15 +302,6 @@ def ratelimit_handler(e):
         'message': 'You have reached your usage limit. Please try again later.',
         'retry_after': e.retry_after if hasattr(e, 'retry_after') else None
     }), 429
-
-# Add a simple health check route at the root path
-@app.route('/', methods=['GET'])
-def health_check():
-    return jsonify({
-        'status': 'ok',
-        'service': 'SyllabAI Backend',
-        'version': '1.0.0'
-    })
 
 if __name__ == '__main__':
     logger.info("Starting Flask server...")
