@@ -15,8 +15,18 @@ RUN apt-get update && apt-get install -y \
 # Set working directory
 WORKDIR /app
 
-# Copy backend directory
-COPY backend/ .
+# Try to copy from backend directory if it exists, otherwise assume we're already in the backend directory
+COPY . /app/
+# Check if requirements.txt exists in the current directory
+RUN if [ -f requirements.txt ]; then \
+        echo "Found requirements.txt in root directory"; \
+    elif [ -f backend/requirements.txt ]; then \
+        echo "Found requirements.txt in backend/ directory"; \
+        cp backend/requirements.txt .; \
+    else \
+        echo "No requirements.txt found!"; \
+        exit 1; \
+    fi
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt

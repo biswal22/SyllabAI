@@ -321,6 +321,15 @@ def ratelimit_handler(e):
         'retry_after': e.retry_after if hasattr(e, 'retry_after') else None
     }), 429
 
+# Add a simple health check route at the root path
+@app.route('/', methods=['GET'])
+def health_check():
+    return jsonify({
+        'status': 'ok',
+        'service': 'SyllabAI Backend',
+        'version': '1.0.0'
+    })
+
 if __name__ == '__main__':
     logger.info("Starting Flask server...")
     app.run(port=5000, debug=True) 
